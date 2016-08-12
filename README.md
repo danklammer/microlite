@@ -3,7 +3,7 @@ An uber small 1kb lightbox
 
 #### Purpose
 
-MicroLite is a javascript lightbox with zero dependencies. It has no extras, no icons, no options, no bloat, but looks nice and is easy to use. Ideal for including it directly in your page on a as-needed basis.
+MicroLite is a javascript lightbox with zero dependencies. It has no extras, no icons, no options, no bloat, but looks nice and is easy to use. Ideal for including it directly in your page on an as-needed basis.
 
 It uses CSS multiple backgrounds to load in the high-res version on top of the low-res, making the experience fast and seamless.
 
