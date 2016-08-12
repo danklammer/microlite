@@ -8,7 +8,7 @@ MicroLite is a javascript lightbox with zero dependencies. It has no extras, no 
 It uses CSS multiple backgrounds to load in the high-res version on top of the low-res, making the experience fast and seamless.
 
 
-#### Useage
+#### Usage
 
 Include the script in the bottom of your doc, then simply call the `microLite()` function via onclick on your link to the larger full-size image.
 
