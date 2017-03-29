@@ -1,5 +1,4 @@
 function microLite(i) {
-
 	var childNode = i.children[0],
 		body = document.body,
 		zoomPadding = 50,
@@ -34,19 +33,18 @@ function microLite(i) {
 		mlite.className = 's';
 	}, 20);
 
-	window.addEventListener('wheel', function(e) {
-		var mliteOpen = document.getElementById('ml');
-		if (mliteOpen) {
+	['keydown', 'wheel'].forEach(function(action) {
+		window.addEventListener(action, mliteEventHandler);
+	});
+}
+
+function mliteEventHandler(e) {
+	var mliteOpen = document.getElementById('ml');
+	var isEscape = false;
+	if (mliteOpen) {
+		if (e.type == "wheel") {
 			e.preventDefault();
 		} else {
-			window.onwheel = null;
-		}
-	});
-
-	window.addEventListener('keydown', function(e) {
-		var mliteOpen = document.getElementById('ml');
-		var isEscape = false;
-		if (mliteOpen) {
 			if ("key" in e) {
 				isEscape = (e.key == "Escape" || e.key == "Esc");
 			} else {
@@ -60,8 +58,9 @@ function microLite(i) {
 					}
 				});
 			}
-		} else {
-			window.onkeydown = null;
 		}
-	});
+	} else {
+		window.removeEventListener('keydown', mliteEventHandler);
+		window.removeEventListener('wheel', mliteEventHandler);
+	}
 }

@@ -23,7 +23,7 @@ function microLite(i) {
 		scaleMax = Math.min(scaleX, scaleY),
 		mlite = document.createElement('div');
 
-	// Determain if image is portait or landscape and set appropriate X + Y
+	// Determine if image is portait or landscape and set appropriate X + Y
 	if (scaleX <= scaleY) {
 		var zoomX = zoomPadding,
 			zoomY = ((windowHeight - (imgHeight * scaleMax)) / 2) + zoomPadding;
@@ -52,21 +52,20 @@ function microLite(i) {
 		mlite.className = 's';
 	}, 20);
 
-	// Prevent scrolling while MicroLite is open
-	window.addEventListener('wheel', function(e) {
-		var mliteOpen = document.getElementById('ml');
-		if (mliteOpen) {
+	// Add event listeners for escape key (to close), and wheel (to stop scrolling)
+	['keydown', 'wheel'].forEach(function(action) {
+		window.addEventListener(action, mliteEventHandler);
+	});
+}
+
+// Event handler. Attaches events and also cancels them if image is closed.
+function mliteEventHandler(e) {
+	var mliteOpen = document.getElementById('ml');
+	var isEscape = false;
+	if (mliteOpen) {
+		if (e.type == "wheel") {
 			e.preventDefault();
 		} else {
-			window.onwheel = null;
-		}
-	});
-
-	// Close when escape key is pressed
-	window.addEventListener('keydown', function(e) {
-		var mliteOpen = document.getElementById('ml');
-		var isEscape = false;
-		if (mliteOpen) {
 			if ("key" in e) {
 				isEscape = (e.key == "Escape" || e.key == "Esc");
 			} else {
@@ -80,8 +79,11 @@ function microLite(i) {
 					}
 				});
 			}
-		} else {
-			window.onkeydown = null;
 		}
-	});
+	} else {
+
+		// Remove event listeners if microlite isn't open any longer
+		window.removeEventListener('keydown', mliteEventHandler);
+		window.removeEventListener('wheel', mliteEventHandler);
+	}
 }
