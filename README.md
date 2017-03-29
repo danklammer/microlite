@@ -22,7 +22,7 @@ Include the script in the bottom of your doc, then simply call the `microLite();
 
 #### Size
 
-2,167 | 1,338 
+2,513 | 1,619 
 ---|---
 bytes | minified
 
