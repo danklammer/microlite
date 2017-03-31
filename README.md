@@ -20,9 +20,15 @@ Include the script in the bottom of your doc, then simply call the `microLite();
 </a>
 ```
 
+#### Features
+
+- Prevents wheel-scrolling
+- Closes on escape key keypress
+- Removes listeners when closed, keeping your window events clean
+
 #### Size
 
-2,167 | 1,338 
+2,563 | 1,689
 ---|---
 bytes | minified
 
