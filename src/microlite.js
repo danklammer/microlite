@@ -35,10 +35,10 @@ function microLite(i) {
 	// Give MicroLite an identifier
 	mlite.setAttribute('id', 'ml');
 
-	// Set onClick so MicroLite can be destroyed from DOM when clicked
+	// Set onClick so MicroLite can be destroyed from DOM when clicked and reset overflow for body
 	mlite.setAttribute(
 		'onclick',
-		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } });'
+		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } body.style.overflow = \'\'; });'
 	);
 
 	// Create image container with in-page <styles>
@@ -50,6 +50,7 @@ function microLite(i) {
 	// Set a short time gap to allow CSS transition to occur
 	setTimeout(function() {
 		mlite.className = 's';
+		body.style.overflow = 'hidden';  // Hide the scrollbar
 	}, 20);
 
 	// Add event listeners for escape key (to close), and wheel (to stop scrolling)
@@ -62,22 +63,28 @@ function microLite(i) {
 function mliteEventHandler(e) {
 	var mliteOpen = document.getElementById('ml');
 	var isEscape = false;
+	var isEnter = false;
 	if (mliteOpen) {
-		if (e.type == "wheel") {
+		if (e.type === 'wheel') {
 			e.preventDefault();
 		} else {
-			if ("key" in e) {
-				isEscape = (e.key == "Escape" || e.key == "Esc");
+			if ('key' in e) {
+				isEscape = (e.key === 'Escape' || e.key === 'Esc');
+				isEnter = (e.key === 'Enter');
 			} else {
-				isEscape = (e.keyCode == 27);
+				isEscape = (e.keyCode === 27);
+				isEnter = (e.keyCode === 13);
 			}
 			if (isEscape) {
-				mliteOpen.className = " ";
-				addEventListener("transitionend", function() {
+				mliteOpen.className = ' ';
+				document.body.style.overflow = '';
+				addEventListener('transitionend', function() {
 					if (mliteOpen.parentNode) {
 						mliteOpen.parentNode.removeChild(mliteOpen);
 					}
 				});
+			} else if (isEnter) {
+				e.preventDefault();
 			}
 		}
 	} else {

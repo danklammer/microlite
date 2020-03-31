@@ -24,13 +24,14 @@ function microLite(i) {
 	mlite.setAttribute('id', 'ml');
 	mlite.setAttribute(
 		'onclick',
-		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } });'
+		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } body.style.overflow = \'\'; });'
 	);
 	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div><style>#ml{cursor:pointer;position:fixed;top:0;left:0;width:100%;height:100%}.mlbg{position:fixed;width:100%;height:100%;background:#0a0a0a;opacity:0;will-change:opacity;transition:opacity .4s ease}.mli{background:url(' + i.href + ')no-repeat center,url(' + childNode.src + ')no-repeat center;background-size:contain;width:' + childNode.width + 'px;height:' + childNode.height + 'px;transform:translate3d(' + imgX + 'px, ' + imgY + 'px, 0) scale(1);transform-origin:top left;will-change:transform;transition:transform .4s ease}.s .mlbg{opacity:0.8}.s .mli{transform: translate3d(' + zoomX + 'px, ' + zoomY + 'px, 0) scale(' + scaleMax + ')}</style>';
 	body.appendChild(mlite);
 
 	setTimeout(function() {
 		mlite.className = 's';
+		body.style.overflow = 'hidden';
 	}, 20);
 
 	['keydown', 'wheel'].forEach(function(action) {
@@ -41,22 +42,28 @@ function microLite(i) {
 function mliteEventHandler(e) {
 	var mliteOpen = document.getElementById('ml');
 	var isEscape = false;
+	var isEnter = false;
 	if (mliteOpen) {
-		if (e.type == "wheel") {
+		if (e.type === 'wheel') {
 			e.preventDefault();
 		} else {
-			if ("key" in e) {
-				isEscape = (e.key == "Escape" || e.key == "Esc");
+			if ('key' in e) {
+				isEscape = (e.key === 'Escape' || e.key === 'Esc');
+				isEnter = (e.key === 'Enter');
 			} else {
-				isEscape = (e.keyCode == 27);
+				isEscape = (e.keyCode === 27);
+				isEnter = (e.keyCode === 13);
 			}
 			if (isEscape) {
-				mliteOpen.className = " ";
-				addEventListener("transitionend", function() {
+				mliteOpen.className = ' ';
+				document.body.style.overflow = '';
+				addEventListener('transitionend', function() {
 					if (mliteOpen.parentNode) {
 						mliteOpen.parentNode.removeChild(mliteOpen);
 					}
 				});
+			} else if (isEnter) {
+				e.preventDefault();
 			}
 		}
 	} else {
