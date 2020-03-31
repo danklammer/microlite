@@ -32,6 +32,50 @@ function microLite(i) {
 			zoomY = zoomPadding;
 	}
 
+	// Create a template string for the styling so that it's more readable
+	var myInnerStyle = `
+		<style>
+
+		#ml {
+			cursor:pointer;
+			position:fixed;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%
+		}
+			
+		.mlbg {
+			position:fixed;
+			width:100%;
+			height:100%;
+			background:#0a0a0a;
+			opacity:0;
+			will-change:opacity;
+			transition:opacity .4s ease
+		}
+		
+		.mli {
+			background:url(${i.href})no-repeat center,url(${childNode.src})no-repeat center;
+			background-size:contain;
+			width:${childNode.width}px;
+			height:${childNode.height}px;
+			transform:translate3d(${imgX}px, ${imgY}px, 0) scale(1);
+			transform-origin:top left;
+			will-change:transform;
+			transition:transform .4s ease
+		}
+		
+		.s .mlbg {
+			opacity:0.8
+		}
+		
+		.s .mli {
+			transform: translate3d(${zoomX}px, ${zoomY}px, 0) scale(${scaleMax})
+		}
+		
+		</style>`;
+
 	// Give MicroLite an identifier
 	mlite.setAttribute('id', 'ml');
 
@@ -42,7 +86,7 @@ function microLite(i) {
 	);
 
 	// Create image container with in-page <styles>
-	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div><style>#ml{cursor:pointer;position:fixed;top:0;left:0;width:100%;height:100%}.mlbg{position:fixed;width:100%;height:100%;background:#0a0a0a;opacity:0;will-change:opacity;transition:opacity .4s ease}.mli{background:url(' + i.href + ')no-repeat center,url(' + childNode.src + ')no-repeat center;background-size:contain;width:' + childNode.width + 'px;height:' + childNode.height + 'px;transform:translate3d(' + imgX + 'px, ' + imgY + 'px, 0) scale(1);transform-origin:top left;will-change:transform;transition:transform .4s ease}.s .mlbg{opacity:0.8}.s .mli{transform: translate3d(' + zoomX + 'px, ' + zoomY + 'px, 0) scale(' + scaleMax + ')}</style>';
+	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div>' + myInnerStyle;
 
 	// Append MicroLite to bottom of page
 	body.appendChild(mlite);
