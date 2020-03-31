@@ -32,17 +32,67 @@ function microLite(i) {
 			zoomY = zoomPadding;
 	}
 
+	// Create a template string for the styling so that it's more readable
+	var myInnerStyle = `
+		<style>
+
+		#ml {
+			cursor:pointer;
+			position:fixed;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%
+		}
+			
+		.mlbg {
+			position:fixed;
+			width:100%;
+			height:100%;
+			background:#0a0a0a;
+			opacity:0;
+			will-change:opacity;
+			transition:opacity .4s ease
+		}
+		
+		.mli {
+			background:url(${i.href})no-repeat center,url(${childNode.src})no-repeat center;
+			background-size:contain;
+			width:${childNode.width}px;
+			height:${childNode.height}px;
+			transform:translate3d(${imgX}px, ${imgY}px, 0) scale(1);
+			transform-origin:top left;
+			will-change:transform;
+			transition:transform .4s ease
+		}
+		
+		.s .mlbg {
+			opacity:0.8
+		}
+		
+		.s .mli {
+			transform: translate3d(${zoomX}px, ${zoomY}px, 0) scale(${scaleMax})
+		}
+		
+		</style>`;
+
 	// Give MicroLite an identifier
 	mlite.setAttribute('id', 'ml');
 
-	// Set onClick so MicroLite can be destroyed from DOM when clicked
-	mlite.setAttribute(
-		'onclick',
-		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } });'
-	);
+	// Add event listener so MicroLite can be destroyed from DOM when clicked and reset overflow for body
+	mlite.addEventListener('click', (e) => {
+		e.preventDefault();
+		mlite.className = '';
+		mlite.addEventListener('transitionend', function () {
+			if (mlite.parentNode) {
+				mlite.parentNode.removeChild(this);
+			}
+		});
+		body.style.overflow = '';
+	});
 
 	// Create image container with in-page <styles>
-	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div><style>#ml{cursor:pointer;position:fixed;top:0;left:0;width:100%;height:100%}.mlbg{position:fixed;width:100%;height:100%;background:#0a0a0a;opacity:0;will-change:opacity;transition:opacity .4s ease}.mli{background:url(' + i.href + ')no-repeat center,url(' + childNode.src + ')no-repeat center;background-size:contain;width:' + childNode.width + 'px;height:' + childNode.height + 'px;transform:translate3d(' + imgX + 'px, ' + imgY + 'px, 0) scale(1);transform-origin:top left;will-change:transform;transition:transform .4s ease}.s .mlbg{opacity:0.8}.s .mli{transform: translate3d(' + zoomX + 'px, ' + zoomY + 'px, 0) scale(' + scaleMax + ')}</style>';
+	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div>' + myInnerStyle;
 
 	// Append MicroLite to bottom of page
 	body.appendChild(mlite);
@@ -50,6 +100,7 @@ function microLite(i) {
 	// Set a short time gap to allow CSS transition to occur
 	setTimeout(function() {
 		mlite.className = 's';
+		body.style.overflow = 'hidden';  // Hide the scrollbar
 	}, 20);
 
 	// Add event listeners for escape key (to close), and wheel (to stop scrolling)
@@ -62,22 +113,28 @@ function microLite(i) {
 function mliteEventHandler(e) {
 	var mliteOpen = document.getElementById('ml');
 	var isEscape = false;
+	var isEnter = false;
 	if (mliteOpen) {
-		if (e.type == "wheel") {
+		if (e.type === 'wheel') {
 			e.preventDefault();
 		} else {
-			if ("key" in e) {
-				isEscape = (e.key == "Escape" || e.key == "Esc");
+			if ('key' in e) {
+				isEscape = (e.key === 'Escape' || e.key === 'Esc');
+				isEnter = (e.key === 'Enter');
 			} else {
-				isEscape = (e.keyCode == 27);
+				isEscape = (e.keyCode === 27);
+				isEnter = (e.keyCode === 13);
 			}
 			if (isEscape) {
-				mliteOpen.className = " ";
-				addEventListener("transitionend", function() {
+				mliteOpen.className = ' ';
+				document.body.style.overflow = '';
+				addEventListener('transitionend', function() {
 					if (mliteOpen.parentNode) {
 						mliteOpen.parentNode.removeChild(mliteOpen);
 					}
 				});
+			} else if (isEnter) {
+				e.preventDefault();
 			}
 		}
 	} else {
