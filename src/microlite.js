@@ -79,11 +79,17 @@ function microLite(i) {
 	// Give MicroLite an identifier
 	mlite.setAttribute('id', 'ml');
 
-	// Set onClick so MicroLite can be destroyed from DOM when clicked and reset overflow for body
-	mlite.setAttribute(
-		'onclick',
-		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } body.style.overflow = \'\'; });'
-	);
+	// Add event listener so MicroLite can be destroyed from DOM when clicked and reset overflow for body
+	mlite.addEventListener('click', (e) => {
+		e.preventDefault();
+		mlite.className = '';
+		mlite.addEventListener('transitionend', function () {
+			if (mlite.parentNode) {
+				mlite.parentNode.removeChild(this);
+			}
+		});
+		body.style.overflow = '';
+	});
 
 	// Create image container with in-page <styles>
 	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div>' + myInnerStyle;

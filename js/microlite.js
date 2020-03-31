@@ -65,10 +65,17 @@ function microLite(i) {
 		</style>`;
 
 	mlite.setAttribute('id', 'ml');
-	mlite.setAttribute(
-		'onclick',
-		'this.className = " "; addEventListener("transitionend", function() { if (this.parentNode) { this.parentNode.removeChild(this); } body.style.overflow = \'\'; });'
-	);
+	mlite.addEventListener('click', (e) => {
+		e.preventDefault();
+		mlite.className = '';
+		mlite.addEventListener('transitionend', function () {
+			if (mlite.parentNode) {
+				mlite.parentNode.removeChild(this);
+			}
+		});
+		body.style.overflow = '';
+	});
+
 	mlite.innerHTML = '<div class="mlbg"></div><div class="mli"></div>' + myInnerStyle;
 	body.appendChild(mlite);
 
